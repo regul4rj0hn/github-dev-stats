@@ -20,31 +20,37 @@ github-stats
 ## Setup Instructions
 
 1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd github-stats
-   ```
+```bash
+git clone <repository-url>
+cd github-stats
+```
 
 2. Create a virtual environment for this project using the command:
-   ```bash
-   python -m venv github-stats-venv
-   ```
+```bash
+python -m venv github-stats-venv
+```
 
 3. Activate the virtual environment using the command:
-   ```bash
-   source github-stats-venv/bin/activate
-   ```
+```bash
+source github-stats-venv/bin/activate
+```
 
 4. Install the required dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+```
 
 ## Usage
 
 To run the application, execute the following command:
-```
+```bash
 python src/main.py
+```
+
+### Optional Parameters
+- `--days-back`: Specify the number of days back to fetch metrics from the GitHub API. By default, the script fetches metrics from the past `365 days`. For example, to fetch metrics for the past 30 days run:
+```bash
+python src/main.py --days-back 30
 ```
 
 ## Scoring Model and Metrics
