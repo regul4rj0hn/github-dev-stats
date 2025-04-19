@@ -1,21 +1,18 @@
-def calculate_productivity_score(commits, pull_requests, issues, contributions):
-    # Define weights for each metric
+def calculate_productivity_score(commits, pull_requests, issues, contributions,
+                                 max_commits=700, max_pull_requests=100, max_issues=50, max_contributions=100):
     weights = {
-        'commits': 0.4,
-        'pull_requests': 0.3,
-        'issues': 0.2,
-        'contributions': 0.1
+        'commits': 0.3,
+        'pull_requests': 0.4,
+        'issues': 0.1,
+        'contributions': 0.2
     }
-    
-    # Calculate the weighted score
-    score = (commits * weights['commits'] +
-             pull_requests * weights['pull_requests'] +
-             issues * weights['issues'] +
-             contributions * weights['contributions'])
-    
-    return score
 
-def normalize_score(score, max_score):
-    if max_score > 0:
-        return (score / max_score) * 100
-    return 0
+    # Normalize each component and clamp it between 0 and 1
+    normalized_score = (
+        min(commits / max_commits, 1.0) * weights['commits'] +
+        min(pull_requests / max_pull_requests, 1.0) * weights['pull_requests'] +
+        min(issues / max_issues, 1.0) * weights['issues'] +
+        min(contributions / max_contributions, 1.0) * weights['contributions']
+    )
+
+    return round(normalized_score * 100)
