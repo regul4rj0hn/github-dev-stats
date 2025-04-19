@@ -1,3 +1,4 @@
+dotenv
 logging
 requests
 pandas

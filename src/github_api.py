@@ -1,76 +1,75 @@
 import requests
 import logging
 import os
+from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
-GITHUB_API_URL = "https://api.github.com"
+load_dotenv()
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
-# Set up logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
+GITHUB_API_URL = "https://api.github.com/graphql"
 HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}"
 } if GITHUB_TOKEN else {}
 
-def fetch_commits(username, repo, since):
-    url = f"{GITHUB_API_URL}/repos/{username}/{repo}/commits?since={since}"
-    response = requests.get(url, headers=HEADERS)
-    if response.status_code == 200:
-        logging.info(f"Fetched commits for {username}/{repo} since {since}")
-        return len(response.json())
-    logging.warning(f"Failed to fetch commits for {username}/{repo}: {response.status_code}")
-    return 0
-
-def fetch_pull_requests(username, repo, since):
-    url = f"{GITHUB_API_URL}/repos/{username}/{repo}/pulls?state=all&since={since}"
-    response = requests.get(url, headers=HEADERS)
-    if response.status_code == 200:
-        logging.info(f"Fetched pull requests for {username}/{repo} since {since}")
-        return len(response.json())
-    logging.warning(f"Failed to fetch pull requests for {username}/{repo}: {response.status_code}")
-    return 0
-
-def fetch_issues(username, repo, since):
-    url = f"{GITHUB_API_URL}/repos/{username}/{repo}/issues?since={since}"
-    response = requests.get(url, headers=HEADERS)
-    if response.status_code == 200:
-        logging.info(f"Fetched issues for {username}/{repo} since {since}")
-        return len(response.json())
-    logging.warning(f"Failed to fetch issues for {username}/{repo}: {response.status_code}")
-    return 0
-
-def fetch_contributions(username, since):
-    url = f"{GITHUB_API_URL}/users/{username}/repos"
-    response = requests.get(url, headers=HEADERS)
-    if response.status_code == 200:
-        repos = response.json()
-        total_commits = 0
-        total_pull_requests = 0
-        total_issues = 0
-
-        for repo in repos:
-            total_commits += fetch_commits(username, repo['name'], since)
-            total_pull_requests += fetch_pull_requests(username, repo['name'], since)
-            total_issues += fetch_issues(username, repo['name'], since)
-
-        logging.info(f"Fetched contributions for {username} since {since}")
-        return {
-            "commits": total_commits,
-            "pull_requests": total_pull_requests,
-            "issues": total_issues,
-            "contributions": total_commits + total_pull_requests + total_issues
+def fetch_contributions_graphql(username, since, exclude_private, only_organizations):
+    query = """
+    query($username: String!, $since: DateTime!, $privacy: RepositoryPrivacy) {
+      user(login: $username) {
+        contributionsCollection(from: $since) {
+          totalCommitContributions
+          totalPullRequestContributions
+          totalIssueContributions
+          totalRepositoryContributions
+          restrictedContributionsCount
         }
-    logging.warning(f"Failed to fetch repositories for {username}: {response.status_code}")
+        repositoriesContributedTo(first: 100, privacy: $privacy) {
+          totalCount
+        }
+      }
+    }
+    """
+
+    privacy = "PUBLIC" if exclude_private else None
+
+    variables = {
+        "username": username,
+        "since": since,
+        "privacy": privacy
+    }
+
+    response = requests.post(GITHUB_API_URL, json={"query": query, "variables": variables}, headers=HEADERS)
+    if response.status_code == 200:
+        data = response.json()
+        if "errors" in data:
+            logging.warning(f"GraphQL errors for {username}: {data['errors']}")
+            return None
+        return data["data"]["user"]
+    else:
+        try:
+            error_details = response.json()
+            logging.error(f"Failed to fetch contributions for {username}: {response.status_code} - {error_details.get('message', 'No message provided')}")
+        except ValueError:
+            logging.error(f"Failed to fetch contributions for {username}: {response.status_code} - Unable to parse error details.")
+        return None
+
+def get_developer_metrics(username, days_back=365, exclude_private=False, only_organizations=False):
+    since = (datetime.now() - timedelta(days=days_back)).isoformat()
+    contributions = fetch_contributions_graphql(username, since, exclude_private, only_organizations)
+    if contributions:
+        return {
+            "username": username,
+            "commits": contributions["contributionsCollection"]["totalCommitContributions"],
+            "pull_requests": contributions["contributionsCollection"]["totalPullRequestContributions"],
+            "issues": contributions["contributionsCollection"]["totalIssueContributions"],
+            "contributions": contributions["contributionsCollection"]["totalRepositoryContributions"]
+        }
     return {
+        "username": username,
         "commits": 0,
         "pull_requests": 0,
         "issues": 0,
         "contributions": 0
     }
-
-def get_developer_metrics(username, days_back=365):
-    since = (datetime.now() - timedelta(days=days_back)).isoformat()
-    metrics = fetch_contributions(username, since)
-    metrics["username"] = username
-    return metrics

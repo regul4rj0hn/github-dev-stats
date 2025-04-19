@@ -52,6 +52,14 @@ python src/main.py
 ```bash
 python src/main.py --days-back 30
 ```
+- `--exclude-private`: Exclude contributions to private repositories. By default, the script includes both public and private repositories. For example:
+```bash
+python src/main.py --exclude-private
+```
+- `--only-organizations`: Fetch contributions only within organizations the user is a member of. By default, the script includes contributions to all repositories. For example:
+```bash
+python src/main.py --only-organizations
+```
 
 ## Scoring Model and Metrics
 
