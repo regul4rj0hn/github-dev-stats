@@ -52,7 +52,7 @@ python src/main.py
 The program expects a `developers.csv` file in the `data` folder. This file should include the GitHub username and the developer's full name, separated by a comma. For example:
 
 ```csv
-username,fullname,commits,pullrequests,issues,contributions,reviews,comments,score
+username,fullname,commits,pullrequests,issues,contributions,reviews,repositories_contributed,lines_added,lines_removed,score
 johnthedoe,John Doe
 foofighter,Foo Bar
 ```
