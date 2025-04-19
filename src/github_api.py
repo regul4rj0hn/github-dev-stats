@@ -18,12 +18,21 @@ def fetch_contributions_graphql(username, since, exclude_private, only_organizat
     query = """
     query($username: String!, $since: DateTime!, $privacy: RepositoryPrivacy) {
       user(login: $username) {
+        pullRequests(first: 100, states: MERGED, orderBy: {field: CREATED_AT, direction: DESC}) {
+          nodes {
+            additions
+            deletions
+          }
+        }
         contributionsCollection(from: $since) {
           totalCommitContributions
           totalPullRequestContributions
           totalIssueContributions
           totalRepositoryContributions
           restrictedContributionsCount
+          pullRequestReviewContributions(first: 100) {
+            totalCount
+          }
         }
         repositoriesContributedTo(first: 100, privacy: $privacy) {
           totalCount
@@ -59,17 +68,29 @@ def get_developer_metrics(username, days_back=365, exclude_private=False, only_o
     since = (datetime.now() - timedelta(days=days_back)).isoformat()
     contributions = fetch_contributions_graphql(username, since, exclude_private, only_organizations)
     if contributions:
+        pull_requests = contributions["pullRequests"]["nodes"]
+        total_additions = sum(pr["additions"] for pr in pull_requests)
+        total_deletions = sum(pr["deletions"] for pr in pull_requests)
+
         return {
             "username": username,
             "commits": contributions["contributionsCollection"]["totalCommitContributions"],
             "pull_requests": contributions["contributionsCollection"]["totalPullRequestContributions"],
             "issues": contributions["contributionsCollection"]["totalIssueContributions"],
-            "contributions": contributions["contributionsCollection"]["totalRepositoryContributions"]
+            "contributions": contributions["contributionsCollection"]["totalRepositoryContributions"],
+            "reviews": contributions["contributionsCollection"]["pullRequestReviewContributions"]["totalCount"],
+            "repositories_contributed": contributions["repositoriesContributedTo"]["totalCount"],
+            "lines_added": total_additions,
+            "lines_removed": total_deletions
         }
     return {
         "username": username,
         "commits": 0,
         "pull_requests": 0,
         "issues": 0,
-        "contributions": 0
+        "contributions": 0,
+        "reviews": 0,
+        "repositories_contributed": 0,
+        "lines_added": 0,
+        "lines_removed": 0
     }

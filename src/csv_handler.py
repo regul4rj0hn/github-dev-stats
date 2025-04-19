@@ -8,7 +8,7 @@ def append_metrics_to_csv(filepath, metrics):
     df = pd.read_csv(filepath)
     new_data = pd.DataFrame(metrics)
     new_data = new_data[df.columns]
-    # Update rows in the existing DataFrame based on the 'username' column
+
     for _, new_row in new_data.iterrows():
         username = new_row['username']
         if username in df['username'].values:

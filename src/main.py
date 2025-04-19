@@ -47,7 +47,9 @@ def main():
         logging.info(f"Metrics for {username}: {metrics}")
         
         score = calculate_productivity_score(
-            metrics['commits'], metrics['pull_requests'], metrics['issues'], metrics['contributions']
+            metrics['commits'], metrics['pull_requests'], metrics['issues'], metrics['contributions'],
+            metrics['reviews'], metrics['repositories_contributed'],
+            metrics['lines_added'], metrics['lines_removed']
         )
         logging.info(f"Calculated score for {username}: {score}")
         developer.update(metrics)
