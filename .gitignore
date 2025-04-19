@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.venv/
+github-stats-venv/
+
+# Config
+.env
+
+# Data
+data/
