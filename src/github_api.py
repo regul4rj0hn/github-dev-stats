@@ -18,6 +18,11 @@ def fetch_contributions_graphql(username, since, exclude_private, only_organizat
     query = """
     query($username: String!, $since: DateTime!, $privacy: RepositoryPrivacy) {
       user(login: $username) {
+        organizations(first: 100) {
+          nodes {
+            login
+          }
+        }
         pullRequests(first: 100, states: MERGED, orderBy: {field: CREATED_AT, direction: DESC}) {
           nodes {
             additions
@@ -35,6 +40,12 @@ def fetch_contributions_graphql(username, since, exclude_private, only_organizat
           }
         }
         repositoriesContributedTo(first: 100, privacy: $privacy) {
+          nodes {
+            nameWithOwner
+            owner {
+              login
+            }
+          }
           totalCount
         }
       }
@@ -68,6 +79,15 @@ def get_developer_metrics(username, days_back=365, exclude_private=False, only_o
     since = (datetime.now() - timedelta(days=days_back)).isoformat()
     contributions = fetch_contributions_graphql(username, since, exclude_private, only_organizations)
     if contributions:
+        organizations = {org["login"] for org in contributions["organizations"]["nodes"]}
+        repositories = contributions["repositoriesContributedTo"]["nodes"]
+
+        if only_organizations:
+            logging.info(f"Contributions from {organizations} organization(s).")
+            repositories = [
+                repo for repo in repositories if repo["owner"]["login"] in organizations
+            ]
+
         pull_requests = contributions["pullRequests"]["nodes"]
         total_additions = sum(pr["additions"] for pr in pull_requests)
         total_deletions = sum(pr["deletions"] for pr in pull_requests)
@@ -79,7 +99,7 @@ def get_developer_metrics(username, days_back=365, exclude_private=False, only_o
             "issues": contributions["contributionsCollection"]["totalIssueContributions"],
             "contributions": contributions["contributionsCollection"]["totalRepositoryContributions"],
             "reviews": contributions["contributionsCollection"]["pullRequestReviewContributions"]["totalCount"],
-            "repositories_contributed": contributions["repositoriesContributedTo"]["totalCount"],
+            "repositories_contributed": len(repositories),
             "lines_added": total_additions,
             "lines_removed": total_deletions
         }
