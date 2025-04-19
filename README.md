@@ -7,14 +7,14 @@ This project is designed to measure software developers' productivity by pulling
 ```
 github-stats
 ├── src
-│   ├── main.py          # Entry point of the application
-│   ├── github_api.py    # Functions to interact with the GitHub API
+│   ├── main.py           # Entry point of the application
+│   ├── github_api.py     # Functions to interact with the GitHub API
 │   ├── csv_handler.py    # Handles reading from and writing to the CSV file
-│   └── utils.py         # Utility functions including scoring model
+│   └── utils.py          # Utility functions including scoring model
 ├── data
-│   └── people.csv       # Initial list of developers
+│   └── developers.csv    # Initial list of developers
 ├── requirements.txt      # Project dependencies
-└── README.md            # Project documentation
+└── README.md             # Project documentation
 ```
 
 ## Setup Instructions
@@ -47,6 +47,18 @@ To run the application, execute the following command:
 python src/main.py
 ```
 
+### Input Data File
+
+The program expects a `developers.csv` file in the `data` folder. This file should include the GitHub username and the developer's full name, separated by a comma. For example:
+
+```csv
+username,fullname,commits,pullrequests,issues,contributions,reviews,comments,score
+johnthedoe,John Doe
+foofighter,Foo Bar
+```
+
+The program will fetch metrics for each developer that is listed in this file and calculate their productivity scores.
+
 ### Optional Parameters
 - `--days-back`: Specify the number of days back to fetch metrics from the GitHub API. By default, the script fetches metrics from the past `365 days`. For example, to fetch metrics for the past 30 days run:
 ```bash
@@ -61,9 +73,23 @@ python src/main.py --exclude-private
 python src/main.py --only-organizations
 ```
 
+### Top and Bottom Developers
+
+After calculating the productivity scores, the program identifies:
+- **Top 10% Developers**: Developers with scores in the top 10% of all scores.
+- **Bottom 20% Developers**: Developers with scores in the bottom 20% of all scores.
+
+The full names of these developers are printed to the console. For example:
+```plaintext
+Top 10% Developers: ['Foo Bar']
+Bottom 20% Developers: ['John Doe']
+```
+
+You can modify the default percentage thresholds for top and bottom developers by changing the `top_percent` and `bottom_percent` arguments passed in the `get_top_and_bottom_developers` function.
+
 ## Scoring Model and Metrics
 
-The productivity score is calculated based on various metrics fetched from the GitHub API. Each metric reflects a specific aspect of developer performance and engagement. The scoring model uses a weighted formula to calculate the final productivity score, which is then appended to the `people.csv` file along with the fetched metrics.
+The productivity score is calculated based on various metrics fetched from the GitHub API. Each metric reflects a specific aspect of developer performance and engagement. The scoring model uses a weighted formula to calculate the final productivity score, which is then appended to the `developers.csv` file along with the fetched metrics.
 
 ### Metrics and Weights
 

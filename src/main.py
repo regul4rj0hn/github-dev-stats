@@ -1,12 +1,11 @@
-import csv
-import requests
 import logging
 import argparse
 from github_api import get_developer_metrics
-from csv_handler import load_developers, append_metrics_to_csv
+from csv_handler import load_developers, append_metrics_to_csv, get_top_and_bottom_developers
 from utils import calculate_productivity_score
 
-# Set up logging
+DATA_FILE_PATH = "data/developers.csv"
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def main():
@@ -33,8 +32,8 @@ def main():
     args = parser.parse_args()
 
     logging.info(f"Starting the script with days_back={args.days_back}, exclude_private={args.exclude_private}, only_organizations={args.only_organizations}...")
-    developers = load_developers('data/people.csv')
-    
+    developers = load_developers(DATA_FILE_PATH)
+
     for developer in developers:
         username = developer['username']
         logging.info(f"Fetching metrics for {username}...")
@@ -55,8 +54,13 @@ def main():
         developer.update(metrics)
         developer['score'] = score
 
-    append_metrics_to_csv('data/people.csv', developers)
+    append_metrics_to_csv(DATA_FILE_PATH, developers)
     logging.info("Finished updating the CSV file.")
+
+    # Get top and bottom developers
+    top_developers, bottom_developers = get_top_and_bottom_developers(DATA_FILE_PATH, 10, 20)
+    print("Top 10% Developers:", top_developers)
+    print("Bottom 20% Developers:", bottom_developers)
 
 if __name__ == "__main__":
     main()
