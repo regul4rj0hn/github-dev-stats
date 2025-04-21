@@ -2,7 +2,7 @@ import logging
 import argparse
 import os
 from dotenv import load_dotenv
-from github_api import GitHubAPI
+from github_handler import GitHubHandler
 from csv_handler import load_developers, append_metrics_to_csv, get_top_and_bottom_developers
 from utils import calculate_productivity_score
 from datetime import datetime, timedelta
@@ -17,8 +17,7 @@ def main():
         "DATA_FILE_PATH": os.getenv("DATA_FILE_PATH", "data/developers.csv")
     }
 
-    # Initialize the GitHub API handler
-    github_api = GitHubAPI(config["GITHUB_TOKEN"], config["GITHUB_API_URL"])
+    github_handler = GitHubHandler(config["GITHUB_TOKEN"], config["GITHUB_API_URL"])
 
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Fetch GitHub developer metrics.")
@@ -48,7 +47,7 @@ def main():
     for developer in developers:
         username = developer['username']
         logging.info(f"Fetching metrics for {username}...")
-        metrics = github_api.get_developer_metrics(
+        metrics = github_handler.get_developer_metrics(
             username,
             days_back=args.days_back,
             exclude_private=args.exclude_private,

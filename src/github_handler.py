@@ -2,7 +2,7 @@ import requests
 import logging
 from datetime import datetime, timedelta
 
-class GitHubAPI:
+class GitHubHandler:
     def __init__(self, token, api_url):
         self.token = token
         self.api_url = api_url
