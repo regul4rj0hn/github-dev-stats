@@ -3,7 +3,7 @@ import argparse
 import os
 from dotenv import load_dotenv
 from github_handler import GitHubHandler
-from csv_handler import append_metrics_to_csv, get_top_and_bottom_developers, filter_developers_by_last_updated
+from csv_handler import CSVHandler
 from utils import calculate_productivity_score
 from datetime import datetime, timedelta
 
@@ -18,6 +18,7 @@ def main():
     }
 
     github_handler = GitHubHandler(config["GITHUB_TOKEN"], config["GITHUB_API_URL"])
+    csv_handler = CSVHandler(config["DATA_FILE_PATH"])
 
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Fetch GitHub developer metrics.")
@@ -44,7 +45,7 @@ def main():
     logging.info(f"Starting the script with days_back={args.days_back}, exclude_private={args.exclude_private}, only_organizations={args.only_organizations}...")
 
     # Filter developers by 'last_updated' field
-    developers = filter_developers_by_last_updated(config["DATA_FILE_PATH"])
+    developers = csv_handler.filter_by_last_updated()
 
     updated_developers = []
     for developer in developers:
@@ -75,11 +76,11 @@ def main():
 
         updated_developers.append(developer)
 
-    append_metrics_to_csv(config["DATA_FILE_PATH"], updated_developers)
+    csv_handler.append_metrics(updated_developers)
     logging.info("Finished updating the CSV file.")
 
     # Get top and bottom developers
-    top_developers, bottom_developers = get_top_and_bottom_developers(config["DATA_FILE_PATH"], 10, 20)
+    top_developers, bottom_developers = csv_handler.get_top_and_bottom_developers(10, 20)
     print("Top 10% Developers:", top_developers)
     print("Bottom 20% Developers:", bottom_developers)
 
