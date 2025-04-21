@@ -42,6 +42,13 @@ def process_developer(developer, github_handler, args):
     )
     logging.info(f"Metrics for {username}: {metrics}")
 
+    if metrics['commits'] == 0 and (metrics['lines_added'] > 0 or metrics['lines_removed'] > 0):
+        logging.warning(
+            f"Suspicious data for {username}: 0 commits but significant activity "
+            f"in lines_added ({metrics['lines_added']}) or lines_removed ({metrics['lines_removed']}). "
+            f"Calculated score will not be accurate!"
+        )
+
     score = calculate_productivity_score(
         metrics['commits'], metrics['pull_requests'], metrics['issues'], metrics['contributions'],
         metrics['reviews'], metrics['repositories_contributed'],
