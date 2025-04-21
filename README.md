@@ -40,9 +40,19 @@ source github-stats-venv/bin/activate
 pip install -r requirements.txt
 ```
 
+5. Copy the `.env.example` file to `.env`:
+```bash
+cp .env.example .env
+```
+
+6. Open the `.env` file and populate the `GITHUB_TOKEN` with your GitHub personal access token. The token should have access/visibility to the organizations and repositories you want to benchmark. For example:
+```bash
+GITHUB_TOKEN=ghp_your_github_token_here
+```
+
 ## Usage
 
-To run the application, execute the following command:
+After going through the setup, execute the following command to run the application:
 ```bash
 python src/main.py
 ```

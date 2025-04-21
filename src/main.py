@@ -1,14 +1,25 @@
 import logging
 import argparse
-from github_api import get_developer_metrics
+import os
+from dotenv import load_dotenv
+from github_api import GitHubAPI
 from csv_handler import load_developers, append_metrics_to_csv, get_top_and_bottom_developers
 from utils import calculate_productivity_score
+from datetime import datetime, timedelta
 
-DATA_FILE_PATH = "data/developers.csv"
-
+load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def main():
+    config = {
+        "GITHUB_TOKEN": os.getenv("GITHUB_TOKEN"),
+        "GITHUB_API_URL": os.getenv("GITHUB_API_URL", "https://api.github.com/graphql"),
+        "DATA_FILE_PATH": os.getenv("DATA_FILE_PATH", "data/developers.csv")
+    }
+
+    # Initialize the GitHub API handler
+    github_api = GitHubAPI(config["GITHUB_TOKEN"], config["GITHUB_API_URL"])
+
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Fetch GitHub developer metrics.")
     parser.add_argument(
@@ -32,12 +43,12 @@ def main():
     args = parser.parse_args()
 
     logging.info(f"Starting the script with days_back={args.days_back}, exclude_private={args.exclude_private}, only_organizations={args.only_organizations}...")
-    developers = load_developers(DATA_FILE_PATH)
+    developers = load_developers(config["DATA_FILE_PATH"])
 
     for developer in developers:
         username = developer['username']
         logging.info(f"Fetching metrics for {username}...")
-        metrics = get_developer_metrics(
+        metrics = github_api.get_developer_metrics(
             username,
             days_back=args.days_back,
             exclude_private=args.exclude_private,
@@ -54,11 +65,11 @@ def main():
         developer.update(metrics)
         developer['score'] = score
 
-    append_metrics_to_csv(DATA_FILE_PATH, developers)
+    append_metrics_to_csv(config["DATA_FILE_PATH"], developers)
     logging.info("Finished updating the CSV file.")
 
     # Get top and bottom developers
-    top_developers, bottom_developers = get_top_and_bottom_developers(DATA_FILE_PATH, 10, 20)
+    top_developers, bottom_developers = get_top_and_bottom_developers(config["DATA_FILE_PATH"], 10, 20)
     print("Top 10% Developers:", top_developers)
     print("Bottom 20% Developers:", bottom_developers)
 
