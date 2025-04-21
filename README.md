@@ -13,6 +13,8 @@ github-dev-stats
 │   └── utils.py          # Utility functions including scoring model
 ├── data
 │   └── developers.csv    # List of developers and output
+├── tests
+│   └── test_main.csv     # Unit and functional tests
 ├── requirements.txt      # Python dependencies
 ├── README.md             # Project documentation
 └── LICENSE.md            # Project license
@@ -145,6 +147,17 @@ Score = (commits / max_commits) * 0.2 +
 - **Lines Added (5%)**: While adding code is important, it is weighted lower than removals to emphasize quality over quantity.
 
 This scoring model is designed to provide a balanced view of developer performance, rewarding both productivity and engagement in collaborative activities.
+
+## Testing
+
+This project includes unit and functional tests to ensure the correctness of its functionality. The tests are located in the `tests` directory and assume that you've already gone through the setup steps.
+
+### Running the Tests
+
+To run all tests, make sure you are you've activated the venv and use the following command:
+```bash
+python -m pytest tests/
+```
 
 ## License
 
