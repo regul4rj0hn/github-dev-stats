@@ -3,8 +3,8 @@ from datetime import datetime
 import logging
 
 SCHEMA = [
-    'username', 'fullname', 'commits', 'pull_requests', 'issues', 'contributions',
-    'reviews', 'repositories_contributed', 'lines_added', 'lines_removed', 'score', 'last_updated'
+    'username', 'fullname', 'commits', 'pull_requests', 'issues', 'contributions', 'reviews',
+    'repositories_contributed', 'lines_added', 'lines_removed', 'score', 'last_updated', 'manager'
 ]
 
 class CSVHandler:
