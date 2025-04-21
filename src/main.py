@@ -3,7 +3,7 @@ import argparse
 import os
 from dotenv import load_dotenv
 from github_handler import GitHubHandler
-from csv_handler import load_developers, append_metrics_to_csv, get_top_and_bottom_developers
+from csv_handler import append_metrics_to_csv, get_top_and_bottom_developers, filter_developers_by_last_updated
 from utils import calculate_productivity_score
 from datetime import datetime, timedelta
 
@@ -42,8 +42,11 @@ def main():
     args = parser.parse_args()
 
     logging.info(f"Starting the script with days_back={args.days_back}, exclude_private={args.exclude_private}, only_organizations={args.only_organizations}...")
-    developers = load_developers(config["DATA_FILE_PATH"])
 
+    # Filter developers by 'last_updated' field
+    developers = filter_developers_by_last_updated(config["DATA_FILE_PATH"])
+
+    updated_developers = []
     for developer in developers:
         username = developer['username']
         logging.info(f"Fetching metrics for {username}...")
@@ -61,10 +64,18 @@ def main():
             metrics['lines_added'], metrics['lines_removed']
         )
         logging.info(f"Calculated score for {username}: {score}")
-        developer.update(metrics)
-        developer['score'] = score
 
-    append_metrics_to_csv(config["DATA_FILE_PATH"], developers)
+        # Update metrics and 'last_updated' field if score is non-zero
+        if score > 0:
+            developer.update(metrics)
+            developer['score'] = score
+            developer['last_updated'] = datetime.now().strftime('%Y-%m-%d')
+        else:
+            logging.warning(f"Score for {username} is 0. Please check your permissions on their profile.")
+
+        updated_developers.append(developer)
+
+    append_metrics_to_csv(config["DATA_FILE_PATH"], updated_developers)
     logging.info("Finished updating the CSV file.")
 
     # Get top and bottom developers
