@@ -19,6 +19,8 @@ def parse_args():
                         help="Exclude contributions to private repositories")
     parser.add_argument("--only-organizations", action="store_true", default=False,
                         help="Fetch contributions only within organizations")
+    parser.add_argument("--sort-by", type=str,
+                        help="Sorts the output by the specified column (default: score)")
     return parser.parse_args()
 
 
@@ -71,12 +73,12 @@ def main():
     config = load_config()
 
     logging.info(
-        f"Starting the script with days_back={args.days_back}, "
+        f"Starting the script with days_back={args.days_back}, sort_by={args.sort_by}, "
         f"exclude_private={args.exclude_private}, only_organizations={args.only_organizations}..."
     )
 
     github_handler = GitHubHandler(config["GITHUB_TOKEN"], config["GITHUB_API_URL"])
-    csv_handler = CSVHandler(config["DATA_FILE_PATH"])
+    csv_handler = CSVHandler(config["DATA_FILE_PATH"], args.sort_by)
 
     developers = csv_handler.filter_by_last_updated()
     updated_developers = [process_developer(dev, github_handler, args) for dev in developers]

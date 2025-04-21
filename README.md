@@ -74,6 +74,10 @@ The program will fetch metrics for each developer that is listed in this file an
 ```bash
 python src/main.py --days-back 30
 ```
+- `--sort-by`: Specify the column to sort the CSV rows by (descending). By default, the original ordering is preserved. For example, to order the output rows by the `score` obtained run:
+```bash
+python src/main.py --sort-by score
+```
 - `--exclude-private`: Exclude contributions to private repositories. By default, the script includes both public and private repositories. For example:
 ```bash
 python src/main.py --exclude-private

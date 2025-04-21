@@ -8,8 +8,9 @@ SCHEMA = [
 ]
 
 class CSVHandler:
-    def __init__(self, filepath):
+    def __init__(self, filepath, sort_by):
         self.filepath = filepath
+        self.sort_by = sort_by
 
     def load_data(self):
         try:
@@ -21,6 +22,8 @@ class CSVHandler:
 
     def save_data(self, data):
         df = pd.DataFrame(data).reindex(columns=SCHEMA)
+        if self.sort_by in df.columns:
+            df = df.sort_values(by=self.sort_by, na_position="last") 
         df.to_csv(self.filepath, index=False)
 
     def append_metrics(self, metrics):

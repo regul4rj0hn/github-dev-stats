@@ -9,6 +9,7 @@ github-stats-venv/
 
 # Config
 .env
+.vscode/
 
 # Data
 data/
