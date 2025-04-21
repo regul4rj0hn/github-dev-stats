@@ -5,16 +5,17 @@ This project is designed to measure software developers' productivity by pulling
 ## Project Structure
 
 ```
-github-stats
+github-dev-stats
 ├── src
 │   ├── main.py           # Entry point of the application
-│   ├── github_api.py     # Functions to interact with the GitHub API
+│   ├── github_handler.py # Functions to interact with the GitHub GraphQL API
 │   ├── csv_handler.py    # Handles reading from and writing to the CSV file
 │   └── utils.py          # Utility functions including scoring model
 ├── data
-│   └── developers.csv    # Initial list of developers
-├── requirements.txt      # Project dependencies
-└── README.md             # Project documentation
+│   └── developers.csv    # List of developers and output
+├── requirements.txt      # Python dependencies
+├── README.md             # Project documentation
+└── LICENSE.md            # Project license
 ```
 
 ## Setup Instructions
