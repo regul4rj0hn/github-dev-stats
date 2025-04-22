@@ -15,7 +15,6 @@ class TestCSVHandler(unittest.TestCase):
                 "commits": 10,
                 "pull_requests": 5,
                 "issues": 2,
-                "contributions": 3,
                 "reviews": 1,
                 "repositories_contributed": 2,
                 "lines_added": 100,
@@ -30,7 +29,6 @@ class TestCSVHandler(unittest.TestCase):
                 "commits": 0,
                 "pull_requests": 0,
                 "issues": 0,
-                "contributions": 0,
                 "reviews": 0,
                 "repositories_contributed": 0,
                 "lines_added": 0,
@@ -51,8 +49,8 @@ class TestCSVHandler(unittest.TestCase):
         df = self.csv_handler.load_data()
         self.assertTrue(df.empty)
         self.assertListEqual(list(df.columns), [
-            'username', 'fullname', 'commits', 'pull_requests', 'issues', 'contributions', 'reviews',
-            'repositories_contributed', 'lines_added', 'lines_removed', 'score', 'last_updated', 'manager'
+            'username', 'fullname', 'commits', 'pull_requests', 'issues', 'reviews', 'repositories_contributed',
+            'lines_added', 'lines_removed', 'score', 'last_updated', 'manager'
         ])
 
     def test_save_data_sorts_by_fullname(self):
@@ -70,7 +68,6 @@ class TestCSVHandler(unittest.TestCase):
                 "commits": 20,
                 "pull_requests": 10,
                 "issues": 5,
-                "contributions": 6,
                 "reviews": 2,
                 "repositories_contributed": 4,
                 "lines_added": 200,

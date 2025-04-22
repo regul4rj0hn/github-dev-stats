@@ -6,7 +6,7 @@ class GitHubHandler:
     GRAPHQL_QUERY = """
     query($username: String!, $since: DateTime!, $privacy: RepositoryPrivacy) {
       user(login: $username) {
-        organizations(first: 100) {
+        organizations(first: 10) {
           nodes {
             login
           }
@@ -21,8 +21,6 @@ class GitHubHandler:
           totalCommitContributions
           totalPullRequestContributions
           totalIssueContributions
-          totalRepositoryContributions
-          restrictedContributionsCount
           pullRequestReviewContributions(first: 100) {
             totalCount
           }
@@ -69,9 +67,8 @@ class GitHubHandler:
             "commits": contributions["contributionsCollection"]["totalCommitContributions"],
             "pull_requests": contributions["contributionsCollection"]["totalPullRequestContributions"],
             "issues": contributions["contributionsCollection"]["totalIssueContributions"],
-            "contributions": contributions["contributionsCollection"]["totalRepositoryContributions"],
             "reviews": contributions["contributionsCollection"]["pullRequestReviewContributions"]["totalCount"],
-            "repositories_contributed": len(repos),
+            "repositories_contributed": contributions["repositoriesContributedTo"]["totalCount"],
             "lines_added": total_additions,
             "lines_removed": total_deletions
         }
@@ -105,7 +102,6 @@ class GitHubHandler:
             "commits": 0,
             "pull_requests": 0,
             "issues": 0,
-            "contributions": 0,
             "reviews": 0,
             "repositories_contributed": 0,
             "lines_added": 0,

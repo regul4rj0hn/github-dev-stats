@@ -65,7 +65,7 @@ python src/main.py
 The program expects a `developers.csv` file in the `data` folder. This file should include the GitHub username and the developer's full name, separated by a comma. For example:
 
 ```csv
-username,fullname,commits,pull_requests,issues,contributions,reviews,repositories_contributed,lines_added,lines_removed,score,last_updated,manager
+username,fullname,commits,pull_requests,issues,reviews,repositories_contributed,lines_added,lines_removed,score,last_updated,manager
 johnthedoe,John Doe
 foofighter,Foo Bar
 ```
@@ -112,39 +112,26 @@ The productivity score is calculated based on various metrics fetched from the G
 
 | Metric                     | Weight | Description                                                                                     | Use Case                                                                                     |
 |----------------------------|--------|-------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| **Commits**                | 20%    | Total number of commits made by the developer.                                                 | Reflects the developer's contribution to the codebase.                                      |
-| **Pull Requests**          | 20%    | Number of pull requests created and merged.                                                    | Highlights the developer's role in proposing and integrating changes.                      |
-| **Issues**                 | 10%    | Total issues reported and resolved.                                                            | Demonstrates the developer's involvement in identifying and addressing problems.            |
-| **Contributions**          | 10%    | Overall contributions to repositories (e.g., commits, pull requests, issues).                  | Captures the developer's general activity across repositories.                             |
+| **Commits**                | 30%    | Total number of commits made by the developer.                                                 | Reflects the developer's contribution to the codebase.                                      |
+| **Pull Requests**          | 30%    | Number of pull requests created and merged.                                                    | Highlights the developer's role in proposing and integrating changes.                      |
+| **Issues**                 | 2%    | Total issues reported and resolved.                                                            | Demonstrates the developer's involvement in identifying and addressing problems.            |
 | **Reviews**                | 15%    | Number of pull request reviews completed.                                                      | Reflects the developer's engagement in improving code quality and collaborating with peers. |
-| **Repositories Contributed** | 5%   | Total number of repositories the developer has contributed to.                                 | Indicates the breadth of the developer's contributions across projects.                    |
+| **Repositories Contributed** | 10%   | Total number of repositories the developer has contributed to.                                 | Indicates the breadth of the developer's contributions across projects.                    |
 | **Lines Added**            | 5%     | Total number of lines of code added by the developer.                                          | Measures the developer's contribution to expanding the codebase.                           |
-| **Lines Removed**          | 15%    | Total number of lines of code removed by the developer.                                        | Rewards efforts to simplify and improve the codebase by removing unnecessary code.          |
+| **Lines Removed**          | 8%    | Total number of lines of code removed by the developer.                                        | Rewards efforts to simplify and improve the codebase by removing unnecessary code.          |
 
 ### Scoring Formula
 
 The scoring formula normalizes each metric to a value between 0 and 1 based on its maximum possible value. Each normalized metric is then multiplied by its respective weight, and the results are summed to calculate the final score. The score is scaled to a percentage (0 to 100) and rounded to the nearest whole number.
 
-#### Formula:
-```
-Score = (commits / max_commits) * 0.2 +
-        (pull_requests / max_pull_requests) * 0.2 +
-        (issues / max_issues) * 0.1 +
-        (contributions / max_contributions) * 0.1 +
-        (reviews / max_reviews) * 0.15 +
-        (repositories_contributed / max_repositories_contributed) * 0.05 +
-        (lines_added / max_lines_changed) * 0.05 +
-        (lines_removed / max_lines_changed) * 0.15
-```
-
 ### Reasoning Behind the Weights
 
-- **Commits and Pull Requests (20% each)**: These metrics are heavily weighted because they directly reflect the developer's contributions to the codebase and their role in proposing changes.
+- **Commits and Pull Requests (30% each)**: These metrics are heavily weighted because they directly reflect the developer's contributions to the codebase and their role in proposing changes.
 - **Reviews (15%)**: Code reviews are critical for maintaining code quality and fostering collaboration, so they are given significant weight.
-- **Lines Removed (15%)**: Removing unnecessary or redundant code is highly valued as it simplifies and improves the maintainability of the codebase.
-- **Issues and Contributions (10% each)**: These metrics capture the developer's involvement in identifying problems and their overall activity across repositories.
-- **Repositories Contributed (5%)**: This metric rewards developers who contribute to multiple projects, indicating versatility and collaboration.
+- **Lines Removed (8%)**: Removing unnecessary or redundant code is highly valued as it simplifies and improves the maintainability of the codebase.
+- **Repositories Contributed (5%)**: This metric rewards developers who contribute to multiple projects, indicating versatility and broad collaboration.
 - **Lines Added (5%)**: While adding code is important, it is weighted lower than removals to emphasize quality over quantity.
+- **Issues (2%)**: These metrics capture the developer's involvement in identifying problems and their activity on issues. Bear in mind that most issue tracking happens in Jira so this metric gets a low weight.
 
 This scoring model is designed to provide a balanced view of developer performance, rewarding both productivity and engagement in collaborative activities.
 
