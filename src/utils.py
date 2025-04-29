@@ -23,4 +23,4 @@ def calculate_productivity_score(commits, pull_requests, issues, reviews, reposi
         min(lines_removed / max_lines_changed, 1.0) * weights['lines_removed']
     )
 
-    return round(normalized_score * 100)
+    return round(min(normalized_score, 1.0) * 100)
