@@ -58,12 +58,12 @@ def process_developer(developer, github_handler, args):
     )
     logging.info(f"Calculated score for {username}: {score}")
 
-    if score > 0:
-        developer.update(metrics)
-        developer['score'] = score
-        developer['last_updated'] = datetime.now().strftime('%Y-%m-%d')
-    else:
+    if score == 0:
         logging.warning(f"Score for {username} is 0. Please check your permissions on their profile.")
+
+    developer.update(metrics)
+    developer['score'] = score
+    developer['last_updated'] = datetime.now().strftime('%Y-%m-%d')
 
     return developer
 
