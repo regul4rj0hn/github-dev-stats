@@ -24,3 +24,30 @@ def calculate_productivity_score(commits, pull_requests, issues, reviews, reposi
     )
 
     return round(min(normalized_score, 1.0) * 100)
+
+def categorize_developers(developers):
+    """
+    Categorize developers based on score percentiles:
+    - Top (10%)
+    - Above Average (next 40%)
+    - Below Average (next 30%)
+    - Bottom (20%)
+    """
+    if not developers:
+        return {}
+
+    sorted_devs = sorted(developers, key=lambda x: x['score'], reverse=True)
+    total = len(sorted_devs)
+    
+    top_count = max(1, round(total * 0.1))  # 10%
+    above_count = round(total * 0.4)  # 40%
+    below_count = round(total * 0.3)  # 30%
+
+    categories = {
+        'top': [d['fullname'] for d in sorted_devs[:top_count]],
+        'above_average': [d['fullname'] for d in sorted_devs[top_count:top_count + above_count]],
+        'below_average': [d['fullname'] for d in sorted_devs[top_count + above_count:top_count + above_count + below_count]],
+        'bottom': [d['fullname'] for d in sorted_devs[top_count + above_count + below_count:]]
+    }
+
+    return categories

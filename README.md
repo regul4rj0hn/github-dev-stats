@@ -73,6 +73,7 @@ foofighter,Foo Bar
 The program will fetch metrics for each developer that is listed in this file and calculate their productivity scores.
 
 ### Optional Parameters
+
 - `--days-back`: Specify the number of days back to fetch metrics from the GitHub API. By default, the script fetches metrics from the past `365 days`. For example, to fetch metrics for the past 30 days run:
 ```bash
 python src/main.py --days-back 30
@@ -90,19 +91,22 @@ python src/main.py --exclude-private
 python src/main.py --only-organizations
 ```
 
-### Top and Bottom Developers
+### Developer Categories
 
-After calculating the productivity scores, the program identifies:
-- **Top 10% Developers**: Developers with scores in the top 10% of all scores.
-- **Bottom 20% Developers**: Developers with scores in the bottom 20% of all scores.
+After calculating the productivity scores, the program categorizes developers into four groups:
+- **Top**: Developers with scores in the top 10% of all scores
+- **Above Average**: The next 40% of developers
+- **Below Average**: The following 30% of developers
+- **Bottom**: The remaining 20% of developers
 
 The full names of these developers are printed to the console. For example:
 ```plaintext
-Top 10% Developers: ['Foo Bar']
-Bottom 20% Developers: ['John Doe']
+Developer Categories:
+Top (10%): ['Luke Skywalker']
+Above Average (40%): ['Obi-Wan Kenobi', 'Han Solo', 'Leia Organa', 'Padme Amidala']
+Below Average (30%): ['Lando Calrissian', 'Chewbacca', 'C-3PO']
+Bottom (20%): ['R2-D2', 'Jar Jar Binks']
 ```
-
-You can modify the default percentage thresholds for top and bottom developers by changing the `top_percent` and `bottom_percent` arguments passed in the `get_top_and_bottom_developers` function.
 
 ## Scoring Model and Metrics
 

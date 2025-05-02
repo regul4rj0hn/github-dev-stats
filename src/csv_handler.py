@@ -48,23 +48,6 @@ class CSVHandler:
 
         self.save_data(merged_df)
 
-    def get_top_and_bottom_developers(self, top_percent=10, bottom_percent=20):
-        """
-        Return lists of top and bottom performing developers based on score percentile.
-        """
-        df = self.load_data()
-        if df.empty or 'score' not in df.columns:
-            return [], []
-
-        df['score'] = pd.to_numeric(df['score'], errors='coerce')
-        top_thresh = df['score'].quantile(1 - top_percent / 100)
-        bottom_thresh = df['score'].quantile(bottom_percent / 100)
-
-        top_devs = df[df['score'] >= top_thresh]['fullname'].tolist()
-        bottom_devs = df[df['score'] <= bottom_thresh]['fullname'].tolist()
-
-        return top_devs, bottom_devs
-
     def filter_by_last_updated(self):
         """
         Return a list of developer records that need processing based on 'last_updated'.
@@ -80,3 +63,14 @@ class CSVHandler:
 
         process_df = df[df['last_updated'].isna() | (df['last_updated'] < today)]
         return process_df.to_dict(orient='records')
+
+    def get_developers_with_scores(self):
+        """
+        Return all developers with their scores as a list of dictionaries.
+        """
+        df = self.load_data()
+        if df.empty or 'score' not in df.columns:
+            return []
+        
+        df['score'] = pd.to_numeric(df['score'], errors='coerce')
+        return df[['fullname', 'score']].to_dict(orient='records')

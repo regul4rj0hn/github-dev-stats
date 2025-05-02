@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from github_handler import GitHubHandler
 from csv_handler import CSVHandler
-from utils import calculate_productivity_score
+from utils import calculate_productivity_score, categorize_developers
 from datetime import datetime
 
 load_dotenv()
@@ -86,9 +86,14 @@ def main():
     csv_handler.append_metrics(updated_developers)
     logging.info("Finished updating the CSV file.")
 
-    top_devs, bottom_devs = csv_handler.get_top_and_bottom_developers(10, 20)
-    print("Top 10% Developers:", top_devs)
-    print("Bottom 20% Developers:", bottom_devs)
+    developers = csv_handler.get_developers_with_scores()
+    categories = categorize_developers(developers)
+
+    print("\nDeveloper Categories:")
+    print("Top (10%):", categories['top'])
+    print("Above Average (40%):", categories['above_average'])
+    print("Below Average (30%):", categories['below_average'])
+    print("Bottom (20%):", categories['bottom'])
 
 
 if __name__ == "__main__":

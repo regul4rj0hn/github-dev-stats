@@ -90,5 +90,28 @@ class TestCSVHandler(unittest.TestCase):
         self.assertIn("user1", usernames)
         self.assertIn("user2", usernames)
 
+    def test_get_developers_with_scores(self):
+        # Setup test data
+        test_data = [
+            {'username': 'dev1', 'fullname': 'Developer 1', 'score': 90},
+            {'username': 'dev2', 'fullname': 'Developer 2', 'score': 80}
+        ]
+        self.csv_handler.save_data(test_data)
+
+        # Test the method
+        developers = self.csv_handler.get_developers_with_scores()
+        
+        self.assertEqual(len(developers), 2)
+        self.assertEqual(developers[0]['fullname'], 'Developer 1')
+        self.assertEqual(developers[0]['score'], 90)
+        self.assertEqual(developers[1]['fullname'], 'Developer 2')
+        self.assertEqual(developers[1]['score'], 80)
+
+    def test_get_developers_with_scores_empty(self):
+        # Test with empty CSV
+        self.csv_handler.save_data([])
+        developers = self.csv_handler.get_developers_with_scores()
+        self.assertEqual(developers, [])
+
 if __name__ == "__main__":
     unittest.main()

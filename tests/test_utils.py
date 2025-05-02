@@ -1,5 +1,6 @@
 import unittest
-from utils import calculate_productivity_score
+import pytest
+from utils import calculate_productivity_score, categorize_developers
 
 class TestUtils(unittest.TestCase):
     def test_min_values(self):
@@ -82,6 +83,33 @@ class TestUtils(unittest.TestCase):
             lines_removed=0
         )
         self.assertEqual(score, 0)
+
+def test_categorize_developers_empty():
+    assert categorize_developers([]) == {}
+
+def test_categorize_developers():
+    test_developers = [
+        {'fullname': 'Dev1', 'score': 100},
+        {'fullname': 'Dev2', 'score': 90},
+        {'fullname': 'Dev3', 'score': 80},
+        {'fullname': 'Dev4', 'score': 70},
+        {'fullname': 'Dev5', 'score': 60},
+        {'fullname': 'Dev6', 'score': 50},
+        {'fullname': 'Dev7', 'score': 40},
+        {'fullname': 'Dev8', 'score': 30},
+        {'fullname': 'Dev9', 'score': 20},
+        {'fullname': 'Dev10', 'score': 10},
+    ]
+    
+    categories = categorize_developers(test_developers)
+    
+    assert len(categories['top']) == 1  # 10%
+    assert len(categories['above_average']) == 4  # 40%
+    assert len(categories['below_average']) == 3  # 30%
+    assert len(categories['bottom']) == 2  # 20%
+    
+    assert 'Dev1' in categories['top']
+    assert 'Dev10' in categories['bottom']
 
 if __name__ == "__main__":
     unittest.main()
