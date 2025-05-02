@@ -1,6 +1,5 @@
-dotenv
-logging
+python-dotenv
 requests
 pandas
-pytest
+pytest>=7.0.0
 pytest-mock

@@ -141,7 +141,7 @@ This scoring model is designed to provide a balanced view of developer performan
 
 ## Testing
 
-This project includes unit and functional tests to ensure the correctness of its functionality. The tests are located in the `tests` directory and assume that you've already gone through the setup steps.
+This project includes unit and functional tests using `pytest` to ensure the correctness of its functionality. The tests are located in the `tests` directory and assume that you've already gone through the setup steps.
 
 ### Running the Tests
 
