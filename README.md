@@ -65,7 +65,7 @@ python src/main.py
 The program expects a `developers.csv` file in the `data` folder. This file should include the GitHub username and the developer's full name, separated by a comma. For example:
 
 ```csv
-username,fullname,commits,pull_requests,issues,reviews,repositories_contributed,lines_added,lines_removed,score,last_updated,manager
+username,fullname,commits,pull_requests,reviews,repositories_contributed,lines_added,lines_removed,score,last_updated,manager
 johnthedoe,John Doe
 foofighter,Foo Bar
 ```
@@ -118,10 +118,9 @@ The productivity score is calculated based on various metrics fetched from the G
 |----------------------------|--------|-------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | **Commits**                | 30%    | Total number of commits made by the developer.                                                 | Reflects the developer's contribution to the codebase.                                      |
 | **Pull Requests**          | 30%    | Number of pull requests created and merged.                                                    | Highlights the developer's role in proposing and integrating changes.                      |
-| **Issues**                 | 2%    | Total issues reported and resolved.                                                            | Demonstrates the developer's involvement in identifying and addressing problems.            |
 | **Reviews**                | 15%    | Number of pull request reviews completed.                                                      | Reflects the developer's engagement in improving code quality and collaborating with peers. |
 | **Repositories Contributed** | 10%   | Total number of repositories the developer has contributed to.                                 | Indicates the breadth of the developer's contributions across projects.                    |
-| **Lines Added**            | 5%     | Total number of lines of code added by the developer.                                          | Measures the developer's contribution to expanding the codebase.                           |
+| **Lines Added**            | 7%     | Total number of lines of code added by the developer.                                          | Measures the developer's contribution to expanding the codebase.                           |
 | **Lines Removed**          | 8%    | Total number of lines of code removed by the developer.                                        | Rewards efforts to simplify and improve the codebase by removing unnecessary code.          |
 
 ### Scoring Formula
@@ -132,10 +131,9 @@ The scoring formula normalizes each metric to a value between 0 and 1 based on i
 
 - **Commits and Pull Requests (30% each)**: These metrics are heavily weighted because they directly reflect the developer's contributions to the codebase and their role in proposing changes.
 - **Reviews (15%)**: Code reviews are critical for maintaining code quality and fostering collaboration, so they are given significant weight.
+- **Repositories Contributed (10%)**: This metric rewards developers who contribute to multiple projects, indicating versatility and broad collaboration.
 - **Lines Removed (8%)**: Removing unnecessary or redundant code is highly valued as it simplifies and improves the maintainability of the codebase.
-- **Repositories Contributed (5%)**: This metric rewards developers who contribute to multiple projects, indicating versatility and broad collaboration.
-- **Lines Added (5%)**: While adding code is important, it is weighted lower than removals to emphasize quality over quantity.
-- **Issues (2%)**: These metrics capture the developer's involvement in identifying problems and their activity on issues. Bear in mind that most issue tracking happens in Jira so this metric gets a low weight.
+- **Lines Added (7%)**: While adding code is important, it is weighted lower than removals to emphasize quality over quantity.
 
 This scoring model is designed to provide a balanced view of developer performance, rewarding both productivity and engagement in collaborative activities.
 

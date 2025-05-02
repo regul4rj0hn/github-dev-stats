@@ -20,7 +20,6 @@ class GitHubHandler:
         contributionsCollection(from: $since) {
           totalCommitContributions
           totalPullRequestContributions
-          totalIssueContributions
           pullRequestReviewContributions(first: 100) {
             totalCount
           }
@@ -66,7 +65,6 @@ class GitHubHandler:
             "username": username,
             "commits": contributions["contributionsCollection"]["totalCommitContributions"],
             "pull_requests": contributions["contributionsCollection"]["totalPullRequestContributions"],
-            "issues": contributions["contributionsCollection"]["totalIssueContributions"],
             "reviews": contributions["contributionsCollection"]["pullRequestReviewContributions"]["totalCount"],
             "repositories_contributed": contributions["repositoriesContributedTo"]["totalCount"],
             "lines_added": total_additions,
@@ -101,7 +99,6 @@ class GitHubHandler:
             "username": username,
             "commits": 0,
             "pull_requests": 0,
-            "issues": 0,
             "reviews": 0,
             "repositories_contributed": 0,
             "lines_added": 0,

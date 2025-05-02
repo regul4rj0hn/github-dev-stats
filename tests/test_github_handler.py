@@ -15,7 +15,6 @@ def mock_response(mocker):
                 "contributionsCollection": {
                     "totalCommitContributions": 10,
                     "totalPullRequestContributions": 5,
-                    "totalIssueContributions": 2,
                     "totalRepositoryContributions": 3,
                     "pullRequestReviewContributions": {"totalCount": 1}
                 },

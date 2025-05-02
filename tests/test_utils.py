@@ -6,7 +6,6 @@ def test_min_values():
     score = calculate_productivity_score(
         commits=0,
         pull_requests=0,
-        issues=0,
         reviews=0,
         repositories_contributed=0,
         lines_added=0,
@@ -19,7 +18,6 @@ def test_max_values():
     score = calculate_productivity_score(
         commits=700,
         pull_requests=100,
-        issues=30,
         reviews=100,
         repositories_contributed=30,
         lines_added=250000,
@@ -32,7 +30,6 @@ def test_beyond_max_values():
     score = calculate_productivity_score(
         commits=1000,
         pull_requests=200,
-        issues=50,
         reviews=200,
         repositories_contributed=50,
         lines_added=500000,
@@ -45,7 +42,6 @@ def test_mixed_values():
     score = calculate_productivity_score(
         commits=350,  # Half of max
         pull_requests=50,  # Half of max
-        issues=15,  # Half of max
         reviews=200,  # Beyond max
         repositories_contributed=15,  # Half of max
         lines_added=125000,  # Half of max
@@ -59,7 +55,6 @@ def test_no_contributions():
     score = calculate_productivity_score(
         commits=0,
         pull_requests=0,
-        issues=0,
         reviews=0,
         repositories_contributed=0,
         lines_added=0,

@@ -52,7 +52,7 @@ def process_developer(developer, github_handler, args):
         )
 
     score = calculate_productivity_score(
-        metrics['commits'], metrics['pull_requests'], metrics['issues'], 
+        metrics['commits'], metrics['pull_requests'], 
         metrics['reviews'], metrics['repositories_contributed'],
         metrics['lines_added'], metrics['lines_removed']
     )

@@ -8,7 +8,6 @@ def test_process_developer(mocker):
     mock_handler.get_developer_metrics.return_value = {
         "commits": 10,
         "pull_requests": 5,
-        "issues": 2,
         "reviews": 1,
         "repositories_contributed": 2,
         "lines_added": 100,

@@ -3,7 +3,7 @@ from datetime import datetime
 import logging
 
 SCHEMA = [
-    'username', 'fullname', 'commits', 'pull_requests', 'issues', 'reviews', 'repositories_contributed',
+    'username', 'fullname', 'commits', 'pull_requests', 'reviews', 'repositories_contributed',
     'lines_added', 'lines_removed', 'score', 'last_updated', 'manager'
 ]
 

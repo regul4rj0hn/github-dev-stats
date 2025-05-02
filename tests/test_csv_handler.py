@@ -19,7 +19,6 @@ def test_data():
             "fullname": "User One",
             "commits": 10,
             "pull_requests": 5,
-            "issues": 2,
             "reviews": 1,
             "repositories_contributed": 2,
             "lines_added": 100,
@@ -33,7 +32,6 @@ def test_data():
             "fullname": "User Two",
             "commits": 0,
             "pull_requests": 0,
-            "issues": 0,
             "reviews": 0,
             "repositories_contributed": 0,
             "lines_added": 0,
@@ -54,7 +52,7 @@ def test_load_data_creates_empty_file(csv_handler):
     df = csv_handler.load_data()
     assert df.empty
     assert list(df.columns) == [
-        'username', 'fullname', 'commits', 'pull_requests', 'issues', 'reviews', 
+        'username', 'fullname', 'commits', 'pull_requests', 'reviews', 
         'repositories_contributed', 'lines_added', 'lines_removed', 'score', 
         'last_updated', 'manager'
     ]
@@ -73,7 +71,6 @@ def test_append_metrics_updates_existing_data(csv_handler, test_data):
             "fullname": "User One Updated",
             "commits": 20,
             "pull_requests": 10,
-            "issues": 5,
             "reviews": 2,
             "repositories_contributed": 4,
             "lines_added": 200,
