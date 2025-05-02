@@ -112,3 +112,22 @@ def test_get_developers_with_scores_empty(csv_handler):
     csv_handler.save_data([])
     developers = csv_handler.get_developers_with_scores()
     assert developers == []
+
+def test_csv_handler_order_by(csv_handler, test_data):
+    # Create handler with score ordering
+    handler = CSVHandler(csv_handler.filepath, order_by='score')
+    
+    # Add test data with different scores
+    test_data.extend([
+        {
+            "username": "user3",
+            "fullname": "User Three",
+            "score": 95,
+            "last_updated": "2025-04-20",
+        }
+    ])
+    
+    handler.save_data(test_data)
+    df = pd.read_csv(handler.filepath)
+    scores = df['score'].tolist()
+    assert scores == [0, 20, 95], "Data should be sorted by score in ascending order"

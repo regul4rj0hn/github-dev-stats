@@ -20,3 +20,9 @@ def test_process_developer(mocker):
 
     assert updated_developer['score'] == 3
     assert updated_developer['last_updated'] == datetime.now().strftime('%Y-%m-%d')
+
+def test_parse_args_order_by(mocker):
+    mocker.patch('sys.argv', ['main.py', '--order-by', 'score'])
+    from main import parse_args
+    args = parse_args()
+    assert args.order_by == 'score'
